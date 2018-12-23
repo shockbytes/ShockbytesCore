@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="color_1">#ade</color>
+    <color name="color_2">#D81B60</color>
+
+    <color name="nav_color_1">#F00</color>
+    <color name="nav_color_2">#0F0</color>
+    <color name="nav_color_3">#00F</color>
+
+    <color name="toolbar_color">#F44336</color>
+    <color name="toolbar_item_color">#FFF</color>
+    <color name="navigation_bar_color">#AAA</color>
+
+    <color name="navigationBarItemDisabled">#000</color>
+
+    <color name="navigation_bar_item_text">#424242</color>
+    <color name="navigation_bar_item_tint">#00574B</color>
+</resources>

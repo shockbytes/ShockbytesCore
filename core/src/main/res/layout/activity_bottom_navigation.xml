@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+            android:id="@+id/activity_bottom_navigation_appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/activity_bottom_navigation_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <TextView
+                        android:id="@+id/activity_bottom_navigation_txtMainToolbarTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="22sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/activity_bottom_navigation_imgButtonMainToolbarMore"
+                        app:layout_constraintStart_toEndOf="@id/activity_bottom_navigation_imgButtonMainToolbarAdditionalAction"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageButton
+                        android:id="@+id/activity_bottom_navigation_imgButtonMainToolbarMore"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageButton
+                        android:id="@+id/activity_bottom_navigation_imgButtonMainToolbarAdditionalAction"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+            android:id="@+id/activity_bottom_navigation_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/appbar"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <com.leinardi.android.speeddial.SpeedDialView
+            android:id="@+id/activity_bottom_navigation_mainFabMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="2dp"
+            app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior"
+            app:sdExpansionMode="top"
+            app:sdUseReverseAnimationOnClose="true"
+            app:sdMainFabAnimationRotateAngle="90"/>
+
+    <android.support.design.widget.BottomNavigationView
+            android:id="@+id/activity_bottom_navigation_mainBottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@+id/activity_bottom_navigation_viewPager"
+            app:layout_anchorGravity="bottom"
+            app:layout_behavior="at.shockbytes.util.view.BottomNavigationViewBehavior"
+            app:layout_insetEdge="bottom"/>
+
+</android.support.design.widget.CoordinatorLayout>
