@@ -17,9 +17,9 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
 
 
     private val additionalToolbarActionItems = listOf(
-        AdditionalToolbarAction(R.drawable.ic_fab_opened, 0, true) { showToast("Closing time")},
-        AdditionalToolbarAction(R.drawable.ic_search, 0, true) { showToast("Search action")},
-        AdditionalToolbarAction(R.drawable.ic_fab_closed, 0, true) { showToast("Third action")}
+        AdditionalToolbarAction(R.drawable.ic_fab_opened, R.string.action_1, true) { showToast("Closing time")},
+        AdditionalToolbarAction(R.drawable.ic_search, R.string.action_2, true) { showToast("Search action")},
+        AdditionalToolbarAction(R.drawable.ic_fab_closed, R.string.action_3, true) { showToast("Third action")}
     )
 
     private val fabMenuOptions = FabMenuOptions(

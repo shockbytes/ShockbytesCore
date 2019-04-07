@@ -9,6 +9,7 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.view.menu.MenuBuilder
+import android.view.HapticFeedbackConstants
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -192,6 +193,12 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
             // Always set onClickListener
             setOnClickListener {
                 action.onActionClick()
+            }
+
+            setOnLongClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                showToast(action.title)
+                true
             }
 
             if (action.changeWithAnimation) {
