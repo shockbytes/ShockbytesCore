@@ -44,7 +44,7 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
         initialAdditionalToolbarAction = additionalToolbarActionItems[1],
         toolbarColor = R.color.toolbar_color,
         toolbarItemColor = R.color.toolbar_item_color,
-        fabMenuOptions = null,
+        fabMenuOptions = fabMenuOptions,
         titleColor = R.color.colorPrimaryDark,
         navigationBarColor = R.color.navigation_bar_color,
         navigationItemTextColor = R.color.navigation_bar_item_text,

@@ -12,7 +12,6 @@ import android.support.v7.view.menu.MenuBuilder
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.OvershootInterpolator
 import at.shockbytes.core.R
 import at.shockbytes.core.ShockbytesInjector
 import at.shockbytes.core.image.ImageLoader
