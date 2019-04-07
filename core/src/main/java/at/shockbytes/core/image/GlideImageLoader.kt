@@ -15,9 +15,11 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -28,55 +30,71 @@ import io.reactivex.schedulers.Schedulers
  */
 class GlideImageLoader(override val defaultPlaceHolder: Int) : ImageLoader {
 
-    override fun loadImage(context: Context,
-                           url: String,
-                           target: ImageView,
-                           @DrawableRes placeholder: Int,
-                           circular: Boolean,
-                           callback: ImageLoadingCallback?,
-                           callbackHandleValues: Pair<Boolean, Boolean>?) {
+    override fun loadImage(
+        context: Context,
+        url: String,
+        target: ImageView,
+        @DrawableRes placeholder: Int,
+        circular: Boolean,
+        callback: ImageLoadingCallback?,
+        callbackHandleValues: Pair<Boolean, Boolean>?
+    ) {
 
         val request = Glide.with(context).load(checkUrl(url))
-                .apply(getRequestOptions(context, circular, placeholder))
+            .apply(getRequestOptions(context, circular, placeholder))
         executeRequest(request, target, callback, callbackHandleValues)
     }
 
-    override fun loadImageResource(context: Context,
-                                   @DrawableRes resource: Int,
-                                   target: ImageView,
-                                   @DrawableRes placeholder: Int,
-                                   circular: Boolean,
-                                   callback: ImageLoadingCallback?,
-                                   callbackHandleValues: Pair<Boolean, Boolean>?) {
+    override fun loadImageResource(
+        context: Context,
+        @DrawableRes resource: Int,
+        target: ImageView,
+        @DrawableRes placeholder: Int,
+        withCrossFade: Boolean,
+        circular: Boolean,
+        callback: ImageLoadingCallback?,
+        callbackHandleValues: Pair<Boolean, Boolean>?
+    ) {
         val request = Glide.with(context).load(resource)
-                .apply(getRequestOptions(context, circular, placeholder))
+            .apply(getRequestOptions(context, circular, placeholder))
+            .withCrossFade(withCrossFade)
         executeRequest(request, target, callback, callbackHandleValues)
     }
 
-    override fun loadImageUri(context: Context,
-                              uri: Uri,
-                              target: ImageView,
-                              placeholder: Int,
-                              circular: Boolean,
-                              callback: ImageLoadingCallback?,
-                              callbackHandleValues: Pair<Boolean, Boolean>?) {
+    override fun loadImageUri(
+        context: Context,
+        uri: Uri,
+        target: ImageView,
+        placeholder: Int,
+        withCrossFade: Boolean,
+        circular: Boolean,
+        callback: ImageLoadingCallback?,
+        callbackHandleValues: Pair<Boolean, Boolean>?
+    ) {
 
         val request = Glide.with(context).load(uri)
-                .apply(getRequestOptions(context, circular, placeholder))
+            .apply(getRequestOptions(context, circular, placeholder))
+            .withCrossFade(withCrossFade)
         executeRequest(request, target, callback, callbackHandleValues)
     }
 
-    override fun loadImageWithCornerRadius(context: Context,
-                                           url: String,
-                                           target: ImageView,
-                                           @DrawableRes placeholder: Int,
-                                           @Dimension cornerDimension: Int,
-                                           callback: ImageLoadingCallback?,
-                                           callbackHandleValues: Pair<Boolean, Boolean>?) {
+
+
+    override fun loadImageWithCornerRadius(
+        context: Context,
+        url: String,
+        target: ImageView,
+        @DrawableRes placeholder: Int,
+        @Dimension cornerDimension: Int,
+        callback: ImageLoadingCallback?,
+        callbackHandleValues: Pair<Boolean, Boolean>?
+    ) {
         val request = Glide.with(context).load(checkUrl(url))
-                .apply(RequestOptions()
-                        .placeholder(CoreUtils.vector2Drawable(context, placeholder))
-                        .transforms(CenterInside(), RoundedCorners(cornerDimension)))
+            .apply(
+                RequestOptions()
+                    .placeholder(CoreUtils.vector2Drawable(context, placeholder))
+                    .transforms(CenterInside(), RoundedCorners(cornerDimension))
+            )
         executeRequest(request, target, callback, callbackHandleValues)
     }
 
@@ -89,31 +107,37 @@ class GlideImageLoader(override val defaultPlaceHolder: Int) : ImageLoader {
     override fun Uri.loadRoundedBitmap(context: Context): Single<Bitmap> {
         return Single.fromCallable {
             (Glide.with(context).load(this)
-                    .apply(RequestOptions.circleCropTransform()).submit().get() as BitmapDrawable).bitmap
+                .apply(RequestOptions.circleCropTransform()).submit().get() as BitmapDrawable).bitmap
         }.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
     }
 
 
     // --------------------------------------------------------------------------------------------
 
-    private fun executeRequest(requestCopy: RequestBuilder<Drawable>,
-                               target: ImageView,
-                               callback: ImageLoadingCallback?,
-                               callbackHandleValues: Pair<Boolean, Boolean>?) {
+    private fun executeRequest(
+        requestCopy: RequestBuilder<Drawable>,
+        target: ImageView,
+        callback: ImageLoadingCallback?,
+        callbackHandleValues: Pair<Boolean, Boolean>?
+    ) {
 
         var request = requestCopy
         if (callback != null && callbackHandleValues != null) {
             val (handleReady, handleError) = callbackHandleValues
 
             request = request.listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?,
-                                          target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                override fun onLoadFailed(
+                    e: GlideException?, model: Any?,
+                    target: Target<Drawable>?, isFirstResource: Boolean
+                ): Boolean {
                     callback.onImageLoadingFailed(e)
                     return handleError
                 }
 
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
-                                             dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                override fun onResourceReady(
+                    resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                    dataSource: DataSource?, isFirstResource: Boolean
+                ): Boolean {
                     callback.onImageResourceReady(resource)
                     return handleReady
                 }
@@ -123,9 +147,11 @@ class GlideImageLoader(override val defaultPlaceHolder: Int) : ImageLoader {
         request.into(target)
     }
 
-    private fun getRequestOptions(context: Context,
-                                  isCircular: Boolean,
-                                  placeholder: Int): RequestOptions {
+    private fun getRequestOptions(
+        context: Context,
+        isCircular: Boolean,
+        placeholder: Int
+    ): RequestOptions {
         var options = RequestOptions()
 
         if (isCircular) {
@@ -138,9 +164,23 @@ class GlideImageLoader(override val defaultPlaceHolder: Int) : ImageLoader {
     }
 
     private fun checkUrl(url: String): String {
-        return if(url.startsWith("http://")) {
+        return if (url.startsWith("http://")) {
             url.replace("http://", "https://")
         } else url
     }
 
+
+    private fun RequestBuilder<Drawable>.withCrossFade(withCrossFade: Boolean): RequestBuilder<Drawable> {
+        return if (withCrossFade) {
+            this.transition(
+                DrawableTransitionOptions.withCrossFade(
+                    DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(
+                        true
+                    ).build()
+                )
+            )
+        } else {
+            this
+        }
+    }
 }

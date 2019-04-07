@@ -25,6 +25,7 @@ interface ImageLoader {
                           @DrawableRes resource: Int,
                           target: ImageView,
                           @DrawableRes placeholder: Int = defaultPlaceHolder,
+                          withCrossFade: Boolean = false,
                           circular: Boolean = false,
                           callback: ImageLoadingCallback? = null,
                           callbackHandleValues: Pair<Boolean, Boolean>? = null)
@@ -33,6 +34,7 @@ interface ImageLoader {
                      uri: Uri,
                      target: ImageView,
                      @DrawableRes placeholder: Int = defaultPlaceHolder,
+                     withCrossFade: Boolean = false,
                      circular: Boolean = false,
                      callback: ImageLoadingCallback? = null,
                      callbackHandleValues: Pair<Boolean, Boolean>? = null)

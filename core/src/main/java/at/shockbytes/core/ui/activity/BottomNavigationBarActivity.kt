@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.view.menu.MenuBuilder
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.OvershootInterpolator
 import at.shockbytes.core.R
 import at.shockbytes.core.ShockbytesInjector
 import at.shockbytes.core.image.ImageLoader
@@ -18,23 +20,32 @@ import at.shockbytes.core.model.LoginUserEvent
 import at.shockbytes.core.model.ShockbytesUser
 import at.shockbytes.core.ui.model.BottomNavigationActivityOptions
 import at.shockbytes.core.ui.activity.base.BaseActivity
+import at.shockbytes.core.ui.model.AdditionalToolbarAction
 import at.shockbytes.core.ui.model.BottomNavigationTab
+import at.shockbytes.core.ui.model.FabMenuOptions
 import at.shockbytes.core.util.CoreUtils.toggleVisibility
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
+
 
 abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivity<T>(),
     ViewPager.OnPageChangeListener {
 
     protected var tabId: Int = 0
 
+    var additionalToolbarActionItem: AdditionalToolbarAction? = null
+        set(value) {
+            field = value
+            if (value != null) {
+                setupAdditionalToolbarAction(value)
+            }
+        }
+
     private lateinit var pagerAdapter: PagerAdapter
 
     abstract val options: BottomNavigationActivityOptions
 
     abstract val imageLoader: ImageLoader
-
-    abstract fun onAdditionalToolbarActionClicked()
 
     abstract fun setupDarkMode()
 
@@ -45,6 +56,8 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
     abstract fun onFabMenuItemClicked(id: Int): Boolean
 
     abstract fun showWelcomeScreen(user: ShockbytesUser)
+
+    abstract fun onBottomBarPageChanged(newPageIndex: Int)
 
     // TODO Fix this in the next iteration!
     abstract fun showMenuFragment()
@@ -71,19 +84,26 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
 
     override fun onStart() {
         super.onStart()
-        setupFabMenu()
+
+        options.fabMenuOptions?.let { menuOptions ->
+            setupFabMenu(menuOptions)
+        }
     }
 
     override fun onPageSelected(position: Int) {
+        onBottomBarPageChanged(position)
 
         tabId = activity_bottom_navigation_mainBottomNavigation.menu.getItem(position).itemId
         activity_bottom_navigation_mainBottomNavigation.selectedItemId = tabId
 
         activity_bottom_navigation_appBar.setExpanded(true, true)
-        if (options.fabVisiblePageIndices.contains(position)) {
-            activity_bottom_navigation_mainFabMenu.toggleVisibility()
-        } else {
-            activity_bottom_navigation_mainFabMenu.hide()
+
+        options.fabMenuOptions?.visiblePageIndices?.let { visiblePageIndices ->
+            if (visiblePageIndices.contains(position)) {
+                activity_bottom_navigation_mainFabMenu.toggleVisibility()
+            } else {
+                activity_bottom_navigation_mainFabMenu.hide()
+            }
         }
     }
 
@@ -103,7 +123,9 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
                             this,
                             photoUrl,
                             activity_bottom_navigation_imgButtonMainToolbarMore,
-                            circular = true)
+                            circular = true,
+                            withCrossFade = true
+                        )
                     }
                     checkShowWelcomeScreen(event.user, event.showWelcomeScreen)
                 } else {
@@ -134,25 +156,19 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
     // ---------------------------------------------------
 
     private fun setupUI() {
-        activity_bottom_navigation_imgButtonMainToolbarAdditionalAction.setOnClickListener {
-            onAdditionalToolbarActionClicked()
-        }
+
         activity_bottom_navigation_imgButtonMainToolbarMore.setOnClickListener {
             showMenuFragment()
         }
 
-        activity_bottom_navigation_txtMainToolbarTitle.text = options.appName
+        with(activity_bottom_navigation_txtMainToolbarTitle) {
+            text = options.appName
+            setTextColor(ContextCompat.getColor(this.context, options.titleColor))
+        }
 
         activity_bottom_navigation_toolbar.background = ColorDrawable(
             ContextCompat.getColor(this, options.toolbarColor)
         )
-        activity_bottom_navigation_mainFabMenu.setMainFabClosedDrawable(
-            ContextCompat.getDrawable(this, options.fabClosedIcon)
-        )
-        activity_bottom_navigation_mainFabMenu.setMainFabOpenedDrawable(
-            ContextCompat.getDrawable(this, options.fabOpenedIcon)
-        )
-
         activity_bottom_navigation_mainBottomNavigation.background = ColorDrawable(
             ContextCompat.getColor(this, options.navigationBarColor)
         )
@@ -165,24 +181,53 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
 
         activity_bottom_navigation_imgButtonMainToolbarMore.setImageResource(options.overflowIcon)
 
-
-        options.additionalToolbarAction?.let { action ->
-            activity_bottom_navigation_imgButtonMainToolbarAdditionalAction.visibility = View.VISIBLE
-            activity_bottom_navigation_imgButtonMainToolbarAdditionalAction.setImageResource(action.icon)
+        options.initialAdditionalToolbarAction?.let { action ->
+            additionalToolbarActionItem = action
         }
+    }
 
-        activity_bottom_navigation_txtMainToolbarTitle.setTextColor(
-            ContextCompat.getColor(this, options.toolbarItemColor)
-        )
+    private fun setupAdditionalToolbarAction(action: AdditionalToolbarAction) {
+
+        activity_bottom_navigation_imgButtonMainToolbarAdditionalAction.apply {
+
+            // Always set onClickListener
+            setOnClickListener {
+                action.onActionClick()
+            }
+
+            if (action.changeWithAnimation) {
+                animate()
+                    .alpha(0f)
+                    .scaleX(0.5f)
+                    .scaleY(0.5f)
+                    .setInterpolator(AccelerateDecelerateInterpolator())
+                    .withEndAction {
+                        setImageResource(action.icon)
+                        animate()
+                            .alpha(1f)
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setInterpolator(AccelerateDecelerateInterpolator())
+                            .start()
+                    }
+                    .start()
+            } else {
+                setImageResource(action.icon)
+                visibility = View.VISIBLE
+                alpha = 1f
+            }
+        }
     }
 
     @SuppressLint("RestrictedApi")
-    private fun setupFabMenu() {
+    private fun setupFabMenu(options: FabMenuOptions) {
+
+        activity_bottom_navigation_mainFabMenu.visibility = View.VISIBLE
 
         val menu = MenuBuilder(this)
-        menuInflater.inflate(options.fabMenuId, menu)
+        menuInflater.inflate(options.menuId, menu)
 
-        val bgColors = options.fabMenuColorList
+        val bgColors = options.menuColorList
         menu.visibleItems.forEachIndexed { idx, item ->
             activity_bottom_navigation_mainFabMenu.addActionItem(
                 SpeedDialActionItem.Builder(item.itemId, item.icon)
@@ -195,6 +240,14 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
         activity_bottom_navigation_mainFabMenu.setOnActionSelectedListener { item ->
             onFabMenuItemClicked(item.id)
         }
+
+        activity_bottom_navigation_mainFabMenu.setMainFabClosedDrawable(
+            ContextCompat.getDrawable(this, options.iconClosed)
+        )
+        activity_bottom_navigation_mainFabMenu.setMainFabOpenedDrawable(
+            ContextCompat.getDrawable(this, options.iconOpened)
+        )
+
     }
 
     private fun initializeNavigation() {

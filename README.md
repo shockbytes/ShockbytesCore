@@ -7,3 +7,4 @@ TODO Explain repository here
 
 * Introduce customizable MenuFragment
 * Make SettingsActivity part of the core module
+* Introduce base class for PagerAdapter

@@ -11,8 +11,24 @@ import at.shockbytes.core.ui.activity.BottomNavigationBarActivity
 import at.shockbytes.core.ui.model.AdditionalToolbarAction
 import at.shockbytes.core.ui.model.BottomNavigationActivityOptions
 import at.shockbytes.core.ui.model.BottomNavigationTab
+import at.shockbytes.core.ui.model.FabMenuOptions
 
 class MainActivity : BottomNavigationBarActivity<AppComponent>() {
+
+
+    private val additionalToolbarActionItems = listOf(
+        AdditionalToolbarAction(R.drawable.ic_fab_opened, 0, true) { showToast("Closing time")},
+        AdditionalToolbarAction(R.drawable.ic_search, 0, true) { showToast("Search action")},
+        AdditionalToolbarAction(R.drawable.ic_fab_closed, 0, true) { showToast("Third action")}
+    )
+
+    private val fabMenuOptions = FabMenuOptions(
+        menuId = R.menu.menu_fab,
+        menuColorList = listOf(R.color.color_1, R.color.color_2),
+        iconClosed = R.drawable.ic_fab_closed,
+        iconOpened = R.drawable.ic_fab_opened,
+        visiblePageIndices = listOf(0)
+    )
 
     override val options: BottomNavigationActivityOptions = BottomNavigationActivityOptions(
         tabs = listOf(
@@ -24,15 +40,12 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
         appName = "Demo App",
         viewPagerOffscreenLimit = 2,
         appTheme = R.style.AppTheme_NoActionBar,
-        fabMenuId = R.menu.menu_fab,
-        fabMenuColorList = listOf(R.color.color_1, R.color.color_2),
-        fabVisiblePageIndices = listOf(0),
         overflowIcon = R.drawable.ic_overflow,
-        additionalToolbarAction = AdditionalToolbarAction(R.drawable.ic_search),
+        initialAdditionalToolbarAction = additionalToolbarActionItems[1],
         toolbarColor = R.color.toolbar_color,
         toolbarItemColor = R.color.toolbar_item_color,
-        fabClosedIcon = R.drawable.ic_fab_closed,
-        fabOpenedIcon = R.drawable.ic_fab_opened,
+        fabMenuOptions = null,
+        titleColor = R.color.colorPrimaryDark,
         navigationBarColor = R.color.navigation_bar_color,
         navigationItemTextColor = R.color.navigation_bar_item_text,
         navigationItemTintColor = R.color.navigation_bar_item_tint
@@ -40,10 +53,6 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
 
     override val imageLoader: ImageLoader
         get() = GlideImageLoader(R.drawable.ic_placeholder)
-
-    override fun onAdditionalToolbarActionClicked() {
-        showToast("Start search activity")
-    }
 
     override fun setupDarkMode() {
         showToast("Setup dark mode")
@@ -64,6 +73,10 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
 
     override fun showWelcomeScreen(user: ShockbytesUser) {
         showToast("Show welcome screen")
+    }
+
+    override fun onBottomBarPageChanged(newPageIndex: Int) {
+        additionalToolbarActionItem = additionalToolbarActionItems[newPageIndex]
     }
 
     override fun showMenuFragment() {
