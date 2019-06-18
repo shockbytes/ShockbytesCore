@@ -1,7 +1,7 @@
 package at.shockbytes.core.ui.model
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.MenuRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.MenuRes
 
 data class FabMenuOptions(
     @MenuRes val menuId: Int,

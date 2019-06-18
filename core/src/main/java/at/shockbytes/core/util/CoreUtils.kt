@@ -3,8 +3,8 @@ package at.shockbytes.core.util
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Handler
-import android.support.annotation.ColorInt
-import android.support.v7.widget.AppCompatDrawableManager
+import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatDrawableManager
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan

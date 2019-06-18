@@ -2,7 +2,7 @@ package at.shockbytes.core.example
 
 
 import android.net.Uri
-import android.support.v4.view.PagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import at.shockbytes.core.image.GlideImageLoader
 import at.shockbytes.core.image.ImageLoader
 import at.shockbytes.core.model.LoginUserEvent

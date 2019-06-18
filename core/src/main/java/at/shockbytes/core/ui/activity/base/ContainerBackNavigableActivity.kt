@@ -1,7 +1,7 @@
 package at.shockbytes.core.ui.activity.base
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import at.shockbytes.core.ShockbytesInjector
 
 /**
@@ -10,7 +10,7 @@ import at.shockbytes.core.ShockbytesInjector
  */
 abstract class ContainerBackNavigableActivity<T: ShockbytesInjector> : BackNavigableActivity<T>() {
 
-    abstract val displayFragment: Fragment
+    abstract val displayFragment: androidx.fragment.app.Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

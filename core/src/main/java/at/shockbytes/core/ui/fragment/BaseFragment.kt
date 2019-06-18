@@ -1,10 +1,10 @@
 package at.shockbytes.core.ui.fragment
 
 import android.os.Bundle
-import android.support.annotation.ColorRes
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.annotation.ColorRes
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,6 @@ import at.shockbytes.core.ShockbytesApp
 import at.shockbytes.core.ShockbytesInjector
 import at.shockbytes.core.util.CoreUtils.colored
 import io.reactivex.disposables.CompositeDisposable
-
 
 /**
  * Author:  Martin Macheiner

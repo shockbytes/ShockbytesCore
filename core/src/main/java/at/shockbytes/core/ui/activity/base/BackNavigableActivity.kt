@@ -1,7 +1,7 @@
 package at.shockbytes.core.ui.activity.base
 
 import android.os.Bundle
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.view.MenuItem
 import at.shockbytes.core.ShockbytesInjector
 

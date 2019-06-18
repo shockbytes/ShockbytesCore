@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.view.menu.MenuBuilder
+import androidx.core.content.ContextCompat
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.view.menu.MenuBuilder
 import android.view.HapticFeedbackConstants
 import android.view.MenuItem
 import android.view.View
@@ -28,8 +28,7 @@ import com.leinardi.android.speeddial.SpeedDialActionItem
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 
 
-abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivity<T>(),
-    ViewPager.OnPageChangeListener {
+abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivity<T>(), ViewPager.OnPageChangeListener {
 
     protected var tabId: Int = 0
 

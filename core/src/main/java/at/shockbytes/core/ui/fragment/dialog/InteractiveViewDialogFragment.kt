@@ -2,8 +2,8 @@ package at.shockbytes.core.ui.fragment.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import at.shockbytes.core.ShockbytesInjector
 
@@ -27,7 +27,7 @@ abstract class InteractiveViewDialogFragment<T : ShockbytesInjector, L> : BaseDi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_FRAME, appTheme)
+        setStyle(STYLE_NO_FRAME, appTheme)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

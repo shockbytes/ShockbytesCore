@@ -1,6 +1,6 @@
 package at.shockbytes.core.ui.model
 
-import android.support.annotation.*
+import androidx.annotation.*
 
 data class BottomNavigationActivityOptions(
     val tabs: List<BottomNavigationTab>,
