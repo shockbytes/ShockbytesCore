@@ -76,9 +76,9 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
         setupDarkMode()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt("tabId", tabId)
+        outState.putInt("tabId", tabId)
     }
 
     override fun onStart() {
