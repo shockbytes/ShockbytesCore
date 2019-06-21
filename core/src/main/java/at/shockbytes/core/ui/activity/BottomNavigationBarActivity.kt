@@ -27,7 +27,7 @@ import com.leinardi.android.speeddial.SpeedDialActionItem
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 
 
-abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivity<T>(), ViewPager.OnPageChangeListener {
+abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivity<T>() {
 
     protected var tabId: Int = 0
 
@@ -88,11 +88,8 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
         }
     }
 
-    override fun onPageSelected(position: Int) {
+    private fun onPageSelected(position: Int) {
         onBottomBarPageChanged(position)
-
-        tabId = activity_bottom_navigation_mainBottomNavigation.menu.getItem(position).itemId
-        activity_bottom_navigation_mainBottomNavigation.selectedItemId = tabId
 
         activity_bottom_navigation_appBar.setExpanded(true, true)
 
@@ -104,9 +101,6 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
             }
         }
     }
-
-    override fun onPageScrollStateChanged(state: Int) = Unit
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
 
     // ---------------------------------------------------
 
@@ -270,6 +264,8 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
 
                 val fragment = createFragmentForIndex(index)
                 showFragment(fragment)
+
+                onPageSelected(index)
             }
             true
         }

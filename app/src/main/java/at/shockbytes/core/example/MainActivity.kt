@@ -17,9 +17,9 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
 
 
     private val additionalToolbarActionItems = listOf(
-        AdditionalToolbarAction(R.drawable.ic_fab_opened, R.string.action_1, true) { showToast("Closing time")},
-        AdditionalToolbarAction(R.drawable.ic_search, R.string.action_2, true) { showToast("Search action")},
-        AdditionalToolbarAction(R.drawable.ic_fab_closed, R.string.action_3, true) { showToast("Third action")}
+        AdditionalToolbarAction(R.drawable.ic_fab_opened, R.string.action_1, true) { showToast("Closing time") },
+        AdditionalToolbarAction(R.drawable.ic_search, R.string.action_2, true) { showToast("Search action") },
+        AdditionalToolbarAction(R.drawable.ic_fab_closed, R.string.action_3, true) { showToast("Third action") }
     )
 
     private val fabMenuOptions = FabMenuOptions(
@@ -30,12 +30,28 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
         visiblePageIndices = listOf(0)
     )
 
-    private val tabs = listOf(
-        BottomNavigationTab(R.id.nav_item_1, R.drawable.navigation_item_current, R.drawable.ic_nav_drawable_1, "Wifi"),
-        BottomNavigationTab(R.id.nav_item_2, R.drawable.navigation_item_done, R.drawable.ic_nav_drawable_2, "Palette"),
-        BottomNavigationTab(R.id.nav_item_3, R.drawable.navigation_item_suggestions, R.drawable.ic_nav_drawable_3, "Radio")
-    )
-
+    private val tabs by lazy {
+        listOf(
+            BottomNavigationTab(
+                R.id.nav_item_1,
+                R.drawable.navigation_item_current,
+                R.drawable.ic_nav_drawable_1,
+                "Wifi"
+            ),
+            BottomNavigationTab(
+                R.id.nav_item_2,
+                R.drawable.navigation_item_done,
+                R.drawable.ic_nav_drawable_2,
+                "Palette"
+            ),
+            BottomNavigationTab(
+                R.id.nav_item_3,
+                R.drawable.navigation_item_suggestions,
+                R.drawable.ic_nav_drawable_3,
+                "Radio"
+            )
+        )
+    }
     override val options: BottomNavigationActivityOptions = BottomNavigationActivityOptions(
         tabs = tabs,
         defaultTab = R.id.nav_item_2,
@@ -99,6 +115,4 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
     override fun injectToGraph(appComponent: AppComponent?) {
         appComponent?.inject(this)
     }
-
-
 }
