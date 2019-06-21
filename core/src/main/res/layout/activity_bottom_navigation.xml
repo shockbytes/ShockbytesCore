@@ -66,8 +66,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager.widget.ViewPager
-            android:id="@+id/activity_bottom_navigation_viewPager"
+    <FrameLayout
+            android:id="@+id/activity_bottom_navigation_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/appbar"
@@ -90,7 +90,7 @@
             android:id="@+id/activity_bottom_navigation_mainBottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_anchor="@+id/activity_bottom_navigation_viewPager"
+            app:layout_anchor="@+id/activity_bottom_navigation_content"
             app:layout_anchorGravity="bottom"
             app:layout_behavior="at.shockbytes.util.view.BottomNavigationViewBehavior"
             app:layout_insetEdge="bottom"/>

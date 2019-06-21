@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.menu.MenuBuilder
@@ -13,6 +12,7 @@ import android.view.HapticFeedbackConstants
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.fragment.app.Fragment
 import at.shockbytes.core.R
 import at.shockbytes.core.ShockbytesInjector
 import at.shockbytes.core.image.ImageLoader
@@ -21,7 +21,6 @@ import at.shockbytes.core.model.ShockbytesUser
 import at.shockbytes.core.ui.model.BottomNavigationActivityOptions
 import at.shockbytes.core.ui.activity.base.BaseActivity
 import at.shockbytes.core.ui.model.AdditionalToolbarAction
-import at.shockbytes.core.ui.model.BottomNavigationTab
 import at.shockbytes.core.ui.model.FabMenuOptions
 import at.shockbytes.core.util.CoreUtils.toggleVisibility
 import com.leinardi.android.speeddial.SpeedDialActionItem
@@ -40,15 +39,15 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
             }
         }
 
-    private lateinit var pagerAdapter: PagerAdapter
-
     abstract val options: BottomNavigationActivityOptions
 
     abstract val imageLoader: ImageLoader
 
+    protected open val fragmentAnimations: Pair<Int, Int> = Pair(0, 0)
+
     abstract fun setupDarkMode()
 
-    abstract fun setupPagerAdapter(tabs: List<BottomNavigationTab>): PagerAdapter
+    abstract fun createFragmentForIndex(index: Int): Fragment
 
     abstract fun showLoginScreen()
 
@@ -257,13 +256,6 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
 
     private fun initializeNavigation() {
 
-        // Setup the ViewPager
-        pagerAdapter = setupPagerAdapter(options.tabs)
-        activity_bottom_navigation_viewPager.adapter = pagerAdapter
-        activity_bottom_navigation_viewPager.removeOnPageChangeListener(this) // Remove first to avoid multiple listeners
-        activity_bottom_navigation_viewPager.addOnPageChangeListener(this)
-        activity_bottom_navigation_viewPager.offscreenPageLimit = options.viewPagerOffscreenLimit
-
         activity_bottom_navigation_mainBottomNavigation.menu.apply {
             for (tab in options.tabs) {
                 this.add(0, tab.id, 0, tab.title).also { item ->
@@ -274,13 +266,25 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
 
         activity_bottom_navigation_mainBottomNavigation.setOnNavigationItemSelectedListener { item ->
             colorNavigationItems(item)
-            indexForNavigationItemId(item.itemId)?.let { id ->
-                activity_bottom_navigation_viewPager.currentItem = id
+            indexForNavigationItemId(item.itemId)?.let { index ->
+
+                val fragment = createFragmentForIndex(index)
+                showFragment(fragment)
             }
             true
         }
 
         activity_bottom_navigation_mainBottomNavigation.selectedItemId = tabId
+    }
+
+    private fun showFragment(fragment: Fragment) {
+
+        val (inAnim, outAnim) = fragmentAnimations
+
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(inAnim, outAnim, inAnim, outAnim)
+            .replace(R.id.activity_bottom_navigation_content, fragment)
+            .commit()
     }
 
     private fun colorNavigationItems(item: MenuItem) {

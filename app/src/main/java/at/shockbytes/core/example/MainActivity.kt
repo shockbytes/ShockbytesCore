@@ -2,7 +2,7 @@ package at.shockbytes.core.example
 
 
 import android.net.Uri
-import androidx.viewpager.widget.PagerAdapter
+import androidx.fragment.app.Fragment
 import at.shockbytes.core.image.GlideImageLoader
 import at.shockbytes.core.image.ImageLoader
 import at.shockbytes.core.model.LoginUserEvent
@@ -30,12 +30,14 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
         visiblePageIndices = listOf(0)
     )
 
+    private val tabs = listOf(
+        BottomNavigationTab(R.id.nav_item_1, R.drawable.navigation_item_current, R.drawable.ic_nav_drawable_1, "Wifi"),
+        BottomNavigationTab(R.id.nav_item_2, R.drawable.navigation_item_done, R.drawable.ic_nav_drawable_2, "Palette"),
+        BottomNavigationTab(R.id.nav_item_3, R.drawable.navigation_item_suggestions, R.drawable.ic_nav_drawable_3, "Radio")
+    )
+
     override val options: BottomNavigationActivityOptions = BottomNavigationActivityOptions(
-        tabs = listOf(
-            BottomNavigationTab(R.id.nav_item_1, R.drawable.navigation_item_current, R.drawable.ic_nav_drawable_1, "Wifi"),
-            BottomNavigationTab(R.id.nav_item_2, R.drawable.navigation_item_done, R.drawable.ic_nav_drawable_2, "Palette"),
-            BottomNavigationTab(R.id.nav_item_3, R.drawable.navigation_item_suggestions, R.drawable.ic_nav_drawable_3, "Radio")
-        ),
+        tabs = tabs,
         defaultTab = R.id.nav_item_2,
         appName = "Demo App",
         viewPagerOffscreenLimit = 2,
@@ -51,6 +53,8 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
         navigationItemTintColor = R.color.navigation_bar_item_tint
     )
 
+    override val fragmentAnimations: Pair<Int, Int> = Pair(R.anim.abc_fade_in, R.anim.abc_fade_out)
+
     override val imageLoader: ImageLoader
         get() = GlideImageLoader(R.drawable.ic_placeholder)
 
@@ -58,8 +62,8 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
         showToast("Setup dark mode")
     }
 
-    override fun setupPagerAdapter(tabs: List<BottomNavigationTab>): PagerAdapter {
-        return SimplePagerAdapter(supportFragmentManager, tabs)
+    override fun createFragmentForIndex(index: Int): Fragment {
+        return SimpleFragment.newInstance(tabs[index].title)
     }
 
     override fun showLoginScreen() {
