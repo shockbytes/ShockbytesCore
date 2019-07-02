@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.menu.MenuBuilder
 import android.view.HapticFeedbackConstants
@@ -23,8 +22,11 @@ import at.shockbytes.core.ui.activity.base.BaseActivity
 import at.shockbytes.core.ui.model.AdditionalToolbarAction
 import at.shockbytes.core.ui.model.FabMenuOptions
 import at.shockbytes.core.util.CoreUtils.toggleVisibility
+import at.shockbytes.util.AppUtils
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import kotlinx.android.synthetic.main.activity_bottom_navigation.*
+import android.animation.ObjectAnimator
+import android.animation.StateListAnimator
 
 
 abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivity<T>() {
@@ -143,6 +145,22 @@ abstract class BottomNavigationBarActivity<T : ShockbytesInjector> : BaseActivit
             AppCompatDelegate.MODE_NIGHT_NO
         }
         AppCompatDelegate.setDefaultNightMode(mode)
+    }
+
+    protected fun castActionBarShadow(castShadow: Boolean) {
+
+        val elevation = if (castShadow) {
+            AppUtils.convertDpInPixel(4, this).toFloat()
+        } else {
+            0f
+        }
+
+        val stateListAnimator = StateListAnimator()
+        stateListAnimator.addState(
+            IntArray(0),
+            ObjectAnimator.ofFloat(activity_bottom_navigation_appBar, "elevation", elevation)
+        )
+        activity_bottom_navigation_appBar.stateListAnimator = stateListAnimator
     }
 
     // ---------------------------------------------------

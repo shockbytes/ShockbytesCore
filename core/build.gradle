@@ -10,13 +10,13 @@ def crashlyticsVersion = "2.9.7"
 def rxJavaVersion = "2.1.14"
 def rxAndroidVersion = "2.1.0"
 def shockUtilVersion = "4.0.2"
-def glideVersion = "4.8.0"
+def glideVersion = "4.9.0"
 
 android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "0.1"

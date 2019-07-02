@@ -60,8 +60,8 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
         appTheme = R.style.AppTheme_NoActionBar,
         overflowIcon = R.drawable.ic_overflow,
         initialAdditionalToolbarAction = additionalToolbarActionItems[1],
-        toolbarColor = R.color.toolbar_color,
-        toolbarItemColor = R.color.toolbar_item_color,
+        toolbarColor = R.color.toolbar_item_color,
+        toolbarItemColor = R.color.toolbar_color,
         fabMenuOptions = fabMenuOptions,
         titleColor = R.color.colorPrimaryDark,
         navigationBarColor = R.color.navigation_bar_color,
@@ -97,6 +97,11 @@ class MainActivity : BottomNavigationBarActivity<AppComponent>() {
 
     override fun onBottomBarPageChanged(newPageIndex: Int) {
         additionalToolbarActionItem = additionalToolbarActionItems[newPageIndex]
+    }
+
+    override fun onResume() {
+        super.onResume()
+        castActionBarShadow(true)
     }
 
     override fun showMenuFragment() {
